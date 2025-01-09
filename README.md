@@ -17,6 +17,9 @@ python zen-themer.py
 ## How does the Zen Themer work?
 The themer checks to see if you have Zen installed and have setup a `userChrome.css` folder, prompts you to chose the profile you would like to add the zen theme into, then creates a new folder adding the selected `CSS` from the GitHub repo and adding the correct `@import` statement into the `userChrome.css`
 
+## Why am I getting an error locating profiles
+add your `profiles.ini` to the profiles folder in Zen then it should work. This is a tmp solution, make sure to duplicate the folder and not move it.
+
 ## How Does Zen Themer Work?
 
 **Zen Themer works by automating the process of applying themes to Zen browser. Here’s how it works:**
