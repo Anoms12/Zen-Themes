@@ -3,8 +3,7 @@ A curation of themes for Zen browser using userChrome loader
 
 
 # Zen Themer GUI
-
-pleae run the following scripts to be able to accses the user friendly themer
+Run the following scripts in your terminal to be able to accses the user friendly themer
 
 ```bash
 # Clone the repository
