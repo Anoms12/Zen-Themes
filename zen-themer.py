@@ -162,7 +162,18 @@ class GitHubNavigator(QMainWindow):
 
         self.folder_listbox = QListWidget()
         for file in files:
-            item_label = f"[Folder] {file['name']}" if file['type'] == "dir" else file['name']
+            # Add symbols based on the file type
+            if file["type"] == "dir":
+                item_label = f"📁 {file['name']}"
+            elif file["name"].endswith(".css"):
+                item_label = f"📄 {file['name']}"
+            elif file["name"].endswith(".md"):
+                item_label = f"📝 {file['name']}"
+            elif file["name"].endswith(".py"):
+                item_label = f"🐍 {file['name']}"
+            else:
+                item_label = f"📦 {file['name']}"
+
             self.folder_listbox.addItem(item_label)
         self.folder_listbox.itemDoubleClicked.connect(lambda: self.handle_file_selection(user_chrome_path, files))
         self.layout.addWidget(self.folder_listbox)
@@ -187,8 +198,8 @@ class GitHubNavigator(QMainWindow):
             return
 
         selected_text = selected_item.text()
-        is_folder = selected_text.startswith("[Folder]")
-        selected_name = selected_text.split(" ", 1)[1] if is_folder else selected_text
+        is_folder = selected_text.startswith("📁")
+        selected_name = selected_text.split(" ", 1)[1] if is_folder else selected_text.split(" ", 1)[1]
 
         selected_file = next((f for f in files if f["name"] == selected_name), None)
         if not selected_file:
