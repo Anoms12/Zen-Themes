@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
     QLabel, QWidget, QDialog, QMessageBox
 )
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QDesktopServices
+from PyQt6.QtGui import QDesktopServices, QColor, QPalette
 from PyQt6.QtCore import QUrl
 
 # GitHub repository details
@@ -38,6 +38,18 @@ class GitHubNavigator(QMainWindow):
         self.current_profile = None
         self.current_folder_path = ""  # Track the current folder path
         self.init_ui()
+
+        # Apply color scheme
+        self.set_color_scheme()
+
+    def set_color_scheme(self):
+        """Set the color scheme for the application."""
+        palette = self.palette()
+        palette.setColor(QPalette.ColorRole.Window, QColor("#202020"))
+        palette.setColor(QPalette.ColorRole.Button, QColor("#f76f53"))
+        palette.setColor(QPalette.ColorRole.ButtonText, QColor("#FFFFFF"))
+        palette.setColor(QPalette.ColorRole.WindowText, QColor("#FFFFFF"))
+        self.setPalette(palette)
 
     def get_zen_path(self):
         """Check for Zen installation in OS-specific locations."""
@@ -123,10 +135,6 @@ class GitHubNavigator(QMainWindow):
         back_button.clicked.connect(self.go_back_to_profile_selection)
         self.layout.addWidget(back_button)
 
-        # Add label for theme import
-        path_label = QLabel(f"Profile: {self.current_profile}")
-        self.layout.addWidget(path_label)
-
         # Show GitHub folder contents
         self.display_folder_contents(user_chrome_path, self.current_folder_path)
 
@@ -143,6 +151,11 @@ class GitHubNavigator(QMainWindow):
             if widget:
                 widget.deleteLater()
 
+        # Back button remains and goes to profile selection
+        back_button = QPushButton("Back")
+        back_button.clicked.connect(self.go_back_to_profile_selection)
+        self.layout.addWidget(back_button)
+
         # Display the folder path
         path_label = QLabel(f"Current Folder: {folder_path if folder_path else '/'}")
         self.layout.addWidget(path_label)
@@ -158,12 +171,6 @@ class GitHubNavigator(QMainWindow):
         import_button = QPushButton("Import Current Folder and Subfolders")
         import_button.clicked.connect(lambda: self.import_folder_and_subfolders(user_chrome_path, folder_path))
         self.layout.addWidget(import_button)
-
-        # Back button for navigation within folders
-        if folder_path:
-            folder_back_button = QPushButton("Back to Parent Folder")
-            folder_back_button.clicked.connect(lambda: self.navigate_back(user_chrome_path))
-            self.layout.addWidget(folder_back_button)
 
     def fetch_github_files(self, path=""):
         """Fetch the list of files and folders from GitHub."""
@@ -198,59 +205,48 @@ class GitHubNavigator(QMainWindow):
             # Open a web link for non-CSS files
             QDesktopServices.openUrl(QUrl(selected_file["html_url"]))
 
-    def navigate_back(self, user_chrome_path):
-        """Navigate back to the parent folder."""
-        if "/" in self.current_folder_path:
-            self.current_folder_path = "/".join(self.current_folder_path.split("/")[:-1])
-        else:
-            self.current_folder_path = ""
-        self.display_folder_contents(user_chrome_path, self.current_folder_path)
-
     def go_back_to_profile_selection(self):
         """Navigate back to the profile selection screen."""
         self.current_profile = None
         self.init_ui()
 
-    def add_theme_to_userChrome(self, user_chrome_path, selected_file):
+    def add_theme_to_userChrome(self, user_chrome_path, selected_file, relative_path=""):
         """Add the selected theme to the userChrome.css file."""
         theme_content = requests.get(selected_file["download_url"]).text
 
-        # Create zen-themer folder if it doesn't exist
-        zen_themer_folder = user_chrome_path.parent / "zen-themer"
+        # Create subfolders under zen-themer based on the relative path
+        zen_themer_folder = user_chrome_path.parent / "zen-themer" / relative_path
         zen_themer_folder.mkdir(parents=True, exist_ok=True)
 
-        # Download the CSS file to the zen-themer folder
+        # Download the CSS file to the corresponding subfolder
         local_css_path = zen_themer_folder / selected_file["name"]
         with open(local_css_path, "w") as f:
             f.write(theme_content)
 
-        # Add @import statement to userChrome.css
+        # Add @import statement with the subfolder path
         with open(user_chrome_path, "a") as f:
-            f.write(f'@import "zen-themer/{selected_file["name"]}";\n')
+            f.write(f'@import "zen-themer/{relative_path}/{selected_file["name"]}";\n')
 
-        self.show_success(f"Added theme '{selected_file['name']}' to {user_chrome_path}")
+        self.show_success(f"Added theme '{selected_file['name']}' to {zen_themer_folder}")
 
-    def import_folder_and_subfolders(self, user_chrome_path, folder_path):
+    def import_folder_and_subfolders(self, user_chrome_path, folder_path, relative_path=""):
         """Import the current folder and its subfolders into zen-themer."""
         files = self.fetch_github_files(folder_path)
         if not files:
             self.show_error("No files found in the folder to import.")
             return
 
-        # Create zen-themer folder if it doesn't exist
-        zen_themer_folder = user_chrome_path.parent / "zen-themer"
-        zen_themer_folder.mkdir(parents=True, exist_ok=True)
-
-        # Import all CSS files in the current folder and subfolders
+        # Create subfolders for the current folder
         for file in files:
             if file['type'] == 'dir':
                 # Recursively import subfolders
-                self.import_folder_and_subfolders(user_chrome_path, f"{folder_path}/{file['name']}")
+                subfolder_path = f"{relative_path}/{file['name']}" if relative_path else file['name']
+                self.import_folder_and_subfolders(user_chrome_path, f"{folder_path}/{file['name']}", subfolder_path)
             elif file['name'].endswith('.css'):
-                # Download and save the CSS file to zen-themer
-                self.add_theme_to_userChrome(user_chrome_path, file)
+                # Download and save the CSS file in the correct subfolder
+                self.add_theme_to_userChrome(user_chrome_path, file, relative_path)
 
-        self.show_success(f"Imported folder and subfolders into {zen_themer_folder}")
+        self.show_success(f"Imported folder and subfolders into zen-themer/{relative_path}")
 
     def show_error(self, message):
         """Display an error message."""
