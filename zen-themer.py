@@ -16,8 +16,8 @@ OWNER = "Anoms12"
 REPO = "Zen-Themes"
 BRANCH = "main"  # Default branch of your repo
 BASE_URL = f"https://api.github.com/repos/{OWNER}/{REPO}/contents"
-ZEN_INSTALLATION_URL = "https://example.com/install-zen"
-CHROME_SETUP_URL = "https://example.com/setup-chrome"
+ZEN_INSTALLATION_URL = "https://zen-browser.app/download/"
+CHROME_SETUP_URL = "https://docs.zen-browser.app/guides/live-editing"
 
 class GitHubNavigator(QMainWindow):
     def __init__(self):
