@@ -154,6 +154,11 @@ class GitHubNavigator(QMainWindow):
         self.folder_listbox.itemDoubleClicked.connect(lambda: self.handle_file_selection(user_chrome_path, files))
         self.layout.addWidget(self.folder_listbox)
 
+        # Add import button to process current folder and subfolders
+        import_button = QPushButton("Import Current Folder and Subfolders")
+        import_button.clicked.connect(lambda: self.import_folder_and_subfolders(user_chrome_path, folder_path))
+        self.layout.addWidget(import_button)
+
         # Back button for navigation within folders
         if folder_path:
             folder_back_button = QPushButton("Back to Parent Folder")
@@ -224,6 +229,28 @@ class GitHubNavigator(QMainWindow):
             f.write(f'@import "zen-themer/{selected_file["name"]}";\n')
 
         self.show_success(f"Added theme '{selected_file['name']}' to {user_chrome_path}")
+
+    def import_folder_and_subfolders(self, user_chrome_path, folder_path):
+        """Import the current folder and its subfolders into zen-themer."""
+        files = self.fetch_github_files(folder_path)
+        if not files:
+            self.show_error("No files found in the folder to import.")
+            return
+
+        # Create zen-themer folder if it doesn't exist
+        zen_themer_folder = user_chrome_path.parent / "zen-themer"
+        zen_themer_folder.mkdir(parents=True, exist_ok=True)
+
+        # Import all CSS files in the current folder and subfolders
+        for file in files:
+            if file['type'] == 'dir':
+                # Recursively import subfolders
+                self.import_folder_and_subfolders(user_chrome_path, f"{folder_path}/{file['name']}")
+            elif file['name'].endswith('.css'):
+                # Download and save the CSS file to zen-themer
+                self.add_theme_to_userChrome(user_chrome_path, file)
+
+        self.show_success(f"Imported folder and subfolders into {zen_themer_folder}")
 
     def show_error(self, message):
         """Display an error message."""
