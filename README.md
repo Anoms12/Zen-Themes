@@ -14,3 +14,7 @@ cd Zen-Themes
 python zen-themer.py
 
 ```
+
+## How does the Zen Themer work?
+The themer checks to see if you have Zen installed and have setup a userChrome.css folder, prompts you to chose the profile you would like to add the zen theme into, then creates a new folder adding the selected CSS from the GitHub repo and adding the correct `@import` statement into the userChrome.css
+
