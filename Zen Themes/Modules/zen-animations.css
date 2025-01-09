@@ -1,0 +1,116 @@
+/* Cozy animations */
+/* Apply the animation when activated */
+tab-group:not([collapsed]) .tab-group-label-container > label::before {
+  animation: cozy-opening 0.35s ease-in-out; /* Slightly longer duration for a smoother effect */
+}
+
+@keyframes cozy-opening {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(10deg); /* Wiggle more */
+  }
+  50% {
+    transform: rotate(-10deg); /* Wiggle in the opposite direction */
+  }
+  75% {
+    transform: rotate(7deg); /* Smaller wiggle */
+  }
+  100% {
+    transform: rotate(0deg); /* Return to original position */
+  }
+}
+
+tab-group[collapsed] > .tab-group-label-container > label::before {
+  animation: cozy-closing 0.7s cubic-bezier(0.4, 0, 0.2, 0.8); /* Simulating gravity */
+}
+
+@keyframes cozy-closing {
+  0% {
+    width: 18px;
+    height: 18px;
+    transform: translateY(0); /* Start position */
+    opacity: 1;
+  }
+  30% {
+    transform: translateY(-1px); /* Gentle upward motion (peak) */
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(0); /* Return to the start position */
+    opacity: 1;
+  }
+}
+
+/* Transition properties for tab background */
+.tab-background {
+  transition: background-color 0.4s ease, box-shadow 0.4s ease,
+    background 0.5s ease !important;
+}
+
+.tab-group-label-container {
+  /* Transition properties for tab background */
+  transition: background-color 0.4s ease, box-shadow 0.4s ease,
+    background 0.5s ease !important;
+}
+
+/* For toolbarbutton-1 */
+.toolbarbutton-1 {
+  &:hover
+    > :is(
+      .toolbarbutton-icon,
+      .toolbarbutton-text,
+      .toolbarbutton-badge-stack
+    ) {
+    transition: background-color 0.3s ease-in-out,
+      outline-color 0.3s ease-in-out; /* Smooth transition */
+  }
+
+  > :is(.toolbarbutton-icon, .toolbarbutton-text, .toolbarbutton-badge-stack) {
+    transition: background-color 0.3s ease-in-out,
+      outline-color 0.3s ease-in-out;
+  }
+}
+
+.identity-box-button {
+  transition: background-color 0.3s ease-in-out, outline-color 1.3s ease-in-out;
+}
+
+/* Apply transition to urlbar controls, this is what I found worked...*/
+#reader-mode-button,
+#star-button-box,
+#zen-split-views-box,
+#pageActionButton,
+#urlbar-zoom-button,
+#shopping-sidebar-button,
+#translations-button,
+#picture-in-picture-button,
+#page-action-buttons,
+#urlbar-go-button,
+#urlbar-revert-button-container {
+  transition: background-color 0.3s ease-in-out, outline-color 0.3s ease-in-out !important;
+}
+
+/* Animate the tab function icons */
+.close-icon {
+  transition: background-color 0.3s ease-in-out; /* Smooth transition for background-color */
+}
+
+.tab-reset-button {
+  transition: background-color 0.3s ease-in-out; /* Smooth transition for background-color */
+}
+
+/* This was not being applied properly by class for some reason */
+#tabs-newtab-button {
+  transition: background-color 0.3s ease-in-out; /* Smooth transition for background-color */
+}
+
+/* Other things that needed to be animated/transitioned */
+.subviewbutton {
+  transition: background-color 0.3s ease-in-out !important; /* Smooth transition for background-color */
+}
+
+.urlbarView-row-inner {
+  transition: background-color 0.3s ease-in-out !important; /* Smooth transition for background-color */
+}
