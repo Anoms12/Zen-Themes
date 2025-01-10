@@ -1,8 +1,3 @@
-@import "zen-themer//tab-groups.css";
-@import "zen-themer//zen-animations.css";
-
-
-
 #alltabs-button {
   display: block !important;
 }
@@ -177,7 +172,7 @@ width: 50% !important;
 
 /* Shrink Icons */
 #nav-bar-customization-target .toolbarbutton-1 {
-  padding-top: 3%!important;
+  padding-top: 3p%!important;
   transform: scale(.80) !important;
 }
 
@@ -197,18 +192,15 @@ width: 50% !important;
 }
 
 #urlbar-container {
-  position: relative !important;
   max-width: 12vw !important;
   background: none !important;
   margin-right: auto !important;
   margin-left: auto !important;
 }
 #urlbar:not([breakout-extend='true']) {
-
  #urlbar-background {
     background: none !important;
      box-shadow: none !important;
-
  }
   /* Re-arange URLbar Icons */
   #tracking-protection-icon-container {
@@ -237,7 +229,7 @@ width: 50% !important;
 
 
 
-/* URL bar */
+/* Personal URL bar */
 * {
   --urlbarView-item-block-padding: 4px !important;
   --urlbarView-item-inline-padding: 4px !important;
