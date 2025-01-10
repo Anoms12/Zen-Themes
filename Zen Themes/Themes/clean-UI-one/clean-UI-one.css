@@ -1,15 +1,10 @@
+@import "zen-themer//tab-groups.css";
+@import "zen-themer//zen-animations.css";
+
+
+
 #alltabs-button {
   display: block !important;
-}
-
-#zen-main-app-wrapper {
-  background: transparent !important;
-  backdrop-filter: blur(2px) !important;
-}
-
-#browser {
-  background: transparent !important;
-  backdrop-filter: blur(2px) !important;
 }
 
 #toolbarbutton-badge-stack {
