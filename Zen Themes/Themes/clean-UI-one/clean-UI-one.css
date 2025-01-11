@@ -98,19 +98,25 @@ panel {
 }
 
 /* Workspace text */
-#zen-current-workspace-indicator {
-position: absolute !important;
-top: -4.7% !important;
-width: 50% !important;
+#zen-current-workspace-indicator { 
+  position:relative !important;
+  top: -5.2vh !important;
+  width: 50% !important;
+  padding: 2px 0 2px 3.5% !important;
+  margin: 3.98333px 0 3.983333px 0 !important;
+  order: 0 !important;
 }
 
-#zen-current-workspace-indicator-name {
-  top: 35.6% !important;
+ #zen-current-workspace-indicator-name {
+  top: 21% !important;
   font-weight: 600 !important;
   opacity: 100% !important;
   filter: none !important;
-}
+ }
 
+#zen-essentials-container {
+  margin-bottom: -25px !important;
+ }
 
 
 .tabbrowser-tab {
@@ -202,6 +208,8 @@ width: 50% !important;
     order: 0 !important;
     transform: scale(.8) !important;
     margin-top: 0.10% !important;
+    display: flex !important;
+
     
     #tracking-protection-icon {
     list-style-image: url("chrome://browser/skin/zen-icons/link.svg") !important;
@@ -212,11 +220,13 @@ width: 50% !important;
     order: 1 !important;
     transform: scale(.8) !important;
     margin-top: 0.10% !important;
+    display: flex !important;
   }
   /*Hide Other Icons */
   #page-action-buttons {
     display: none !important;
   }
+  
   
 }
 
@@ -406,5 +416,26 @@ width: 50% !important;
   .search-one-offs {
     border-top: 1px solid
       light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.2)) !important;
+  }
+}
+
+@media (-moz-bool-pref: "browser.tabs.allow_transparent_browser") {
+/* makes the browser transparent */
+#navigator-toolbox{
+  background-color:rgba(0,0,0,0) !important;
+}
+#main-window{
+background-color: rgba(41,47,52,0.2) !important;
+-moz-appearance: none !important;
+background-image: none !important;
+--zen-main-browser-background: rgba(0,0,0,0.5) !important;
+}
+
+
+
+@media (-moz-bool-pref: "browser.tabs.allow_transparent_browser") {
+    :root {
+      --tabpanel-background-color: #00000000 !important;
+    }
   }
 }
